@@ -21,6 +21,28 @@ struct Raw{
     string word;
     vector<string> nextPossible;
 };
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// Util functions
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+// Returns random number.   
+// Inp: int min, int max.
+// Out: int, random number based on min & max
+
+int random(int min, int max){
+    return rand()%(max-min + 1) + min;
+}
+
+
+// Splits a string based on its delimiter. Does not return but rather uses a reference to the input.
+
+// Inp:
+// string& input, the string which will get split
+// char delimiter, character to split the string on. 
+// string arr[], temporary safe space for individual tokens.
+// int& index, position to start the splitting.
+
 void splitString(string& input, char delimiter,
                  string arr[], int& index)
 {
@@ -32,13 +54,36 @@ void splitString(string& input, char delimiter,
         arr[index++] = token;
     }
 }
-int random(int min, int max){
-    return rand()%(max-min + 1) + min;
+
+
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// Dataset Generation functions
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+
+// Logs current dataset, helper function
+
+int debug(vector<Raw>& list){
+    for(int i = 0; i < list.size(); i++){
+        Raw element = list[i];
+        cout << endl << element.word << endl;
+        for(int j =0; j < element.nextPossible.size(); j++){
+            cout << "- " << element.nextPossible[j] << endl;
+        }
+    }
+    return 0;
 }
 
+// Fill a reference of a dataset with a processed string.
+// Returns a vector of strings which later gets processed into the dataset
+int formatRDS(vector<string>& dataset, string stringData) {
 
-int fillDS(vector<string>& dataset, string stringData) {
+    // Remove whitespaces from stringData.
 
+
+    // Split the string on every whitespace.
     string arrSubset[1000];
     char delimiter = ' ';
     int index = 0;
@@ -55,26 +100,6 @@ int fillDS(vector<string>& dataset, string stringData) {
     return 0;
 }
 
-int debug(vector<Raw>& list){
-    for(int i = 0; i < list.size(); i++){
-        Raw element = list[i];
-        cout << endl << element.word << endl;
-        for(int j =0; j < element.nextPossible.size(); j++){
-            cout << "- " << element.nextPossible[j] << endl;
-        }
-    }
-    return 0;
-}
-
-vector<Word> calcProb(vector<string> dataset){
-    for(int i = 0; i < dataset.size(); i++){
-        string prevToken = dataset[i - 1];
-        string token = dataset[i];
-        cout << token << endl;
-    }
-
-    return {{0}};
-}
 
 int handleWord(string word, string next, vector<Raw>& list){
     bool flagg = true;
@@ -93,16 +118,15 @@ int handleWord(string word, string next, vector<Raw>& list){
     return 0;
 }
 // 
-// Sort the dataset based on this {firstword, {nextword, nextword, netword}, firstword, {nextword, nexword}}
+// Transforms the formatted Raw data into a real dataset.
 // 
 
-vector<vector<string>> filterList(vector<string> dataset){
+vector<vector<string>> fillDS(vector<string> dataset){
     vector<Raw> list;
     for(int i = 1; i < dataset.size(); i++){
         string prevToken = dataset[i - 1];
         string token = dataset[i];
         handleWord(prevToken, token, list);
-        // cout << prevToken << " -> " << token << endl;
 
     }
     debug(list);
@@ -112,6 +136,6 @@ vector<vector<string>> filterList(vector<string> dataset){
 
 
 int main(){
-    fillDS(dataset, "Hello there this is a sentence. this might be unexpected or this might be totally expected");   
-    filterList(dataset);
+    formatRDS(dataset, "Hello there this is a sentence. this might be unexpected or this might be totally expected");   
+    fillDS(dataset);
 }
