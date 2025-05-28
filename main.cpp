@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <cstdint>
+#include <random>
 
 using namespace std;
 vector<string> dataset;
@@ -31,7 +32,9 @@ void splitString(string& input, char delimiter,
         arr[index++] = token;
     }
 }
-
+int random(int min, int max){
+    return rand()%(max-min + 1) + min;
+}
 
 
 int fillDS(vector<string>& dataset, string stringData) {
@@ -52,7 +55,16 @@ int fillDS(vector<string>& dataset, string stringData) {
     return 0;
 }
 
-
+int debug(vector<Raw>& list){
+    for(int i = 0; i < list.size(); i++){
+        Raw element = list[i];
+        cout << endl << element.word << endl;
+        for(int j =0; j < element.nextPossible.size(); j++){
+            cout << "- " << element.nextPossible[j] << endl;
+        }
+    }
+    return 0;
+}
 
 vector<Word> calcProb(vector<string> dataset){
     for(int i = 0; i < dataset.size(); i++){
@@ -64,31 +76,14 @@ vector<Word> calcProb(vector<string> dataset){
     return {{0}};
 }
 
-// 
-// Sort the dataset based on this {firstword, {nextword, nextword, netword}, firstword, {nextword, nexword}}
-// 
-
-vector<vector<string>> filterList(vector<string> dataset){
-    vector<vector<Raw>> list;
-    for(int i = 1; i < dataset.size(); i++){
-        string prevToken = dataset[i - 1];
-        string token = dataset[i];
-        cout << prevToken << " -> " << token << endl;
-
-    }
-
-    return {{"str"}};
-}
-
-int handleWord(string word, string next, vector<vector<Raw>>& list){
+int handleWord(string word, string next, vector<Raw>& list){
     bool flagg = true;
     for(int i = 0; i < list.size(); i++){
-        Raw element = list[i];
+        Raw& element = list[i];
         if(element.word == word){
             flagg = false;
             element.nextPossible.push_back(next);
         }
-        cout << element[word];
     }
     if(flagg){
         Raw element = {word, {next}};
@@ -97,8 +92,26 @@ int handleWord(string word, string next, vector<vector<Raw>>& list){
 
     return 0;
 }
+// 
+// Sort the dataset based on this {firstword, {nextword, nextword, netword}, firstword, {nextword, nexword}}
+// 
+
+vector<vector<string>> filterList(vector<string> dataset){
+    vector<Raw> list;
+    for(int i = 1; i < dataset.size(); i++){
+        string prevToken = dataset[i - 1];
+        string token = dataset[i];
+        handleWord(prevToken, token, list);
+        // cout << prevToken << " -> " << token << endl;
+
+    }
+    debug(list);
+
+    return {{"str"}};
+}
+
 
 int main(){
-    fillDS(dataset, "Hello there this is a sentence");   
+    fillDS(dataset, "Hello there this is a sentence. this might be unexpected or this might be totally expected");   
     filterList(dataset);
 }
