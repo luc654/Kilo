@@ -1,9 +1,12 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <sstream>
 #include <string>
 #include <cstdint>
 #include <random>
+#include <iterator>
+
 
 using namespace std;
 vector<string> dataset;
@@ -135,7 +138,28 @@ vector<vector<string>> fillDS(vector<string> dataset){
 }
 
 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// File reading & Updating
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+string readFile(string fileName){
+
+    string contents;
+
+   ifstream file( fileName );
+   copy( istream_iterator<char>{ file >> noskipws }, {}, back_inserter( contents ) );
+   file.close();
+
+
+    return contents;
+}
+
+
+
+
 int main(){
-    formatRDS(dataset, "Hello there this is a sentence. this might be unexpected or this might be totally expected");   
+    string raw = readFile("data.txt");
+    formatRDS(dataset, raw);   
     fillDS(dataset);
 }
