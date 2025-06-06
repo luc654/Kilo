@@ -11,15 +11,7 @@
 
 
 using namespace std;
-struct Token {
-    int chance;
-    string value;
-};
 
-struct Word {
-    string word;
-    vector<vector<Token>> tokens;
-};
 struct Raw{
     string word;
     vector<string> nextPossible;
@@ -135,7 +127,6 @@ vector<Raw> fillDS(vector<string> dataset){
         handleWord(prevToken, token, list);
 
     }
-    debug(list);
 
     return list;
 }
