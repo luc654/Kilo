@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -9,8 +11,6 @@
 
 
 using namespace std;
-vector<string> dataset;
-
 struct Token {
     int chance;
     string value;
@@ -25,6 +25,9 @@ struct Raw{
     vector<string> nextPossible;
 };
 
+vector<string> dataset;
+vector<Raw> base;
+
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // Util functions
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -33,7 +36,7 @@ struct Raw{
 // Inp: int min, int max.
 // Out: int, random number based on min & max
 
-int random(int min, int max){
+int rand(int min, int max){
     return rand()%(max-min + 1) + min;
 }
 
@@ -124,7 +127,7 @@ int handleWord(string word, string next, vector<Raw>& list){
 // Transforms the formatted Raw data into a real dataset.
 // 
 
-vector<vector<string>> fillDS(vector<string> dataset){
+vector<Raw> fillDS(vector<string> dataset){
     vector<Raw> list;
     for(int i = 1; i < dataset.size(); i++){
         string prevToken = dataset[i - 1];
@@ -134,9 +137,29 @@ vector<vector<string>> fillDS(vector<string> dataset){
     }
     debug(list);
 
-    return {{"str"}};
+    return list;
 }
 
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// Dataset interpretation
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+string getWord(string input, vector<Raw> dataset){
+    bool flag = false;
+    for(int i = 0; i < dataset.size(); i++){
+        // Input exists in dataset
+        if(strcmp(input.c_str(), dataset[i].word.c_str()) == 0){
+            int random = rand(0, dataset[i].nextPossible.size());
+            return dataset[i].nextPossible[random];
+        }
+    }
+    // Input doesnt exist in dataset. return random word from dataset.
+    int random = rand(0, dataset.size());
+    return dataset[random].word; 
+
+}
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // File reading & Updating
@@ -157,9 +180,21 @@ string readFile(string fileName){
 
 
 
+void loop(){
+    while(true){
+        string input; 
+        cin >> input;
+        string nextword = getWord(input, base);
+        cout << nextword << endl;
+    }
+}
+
 
 int main(){
     string raw = readFile("data.txt");
     formatRDS(dataset, raw);   
-    fillDS(dataset);
+    base = fillDS(dataset);
+
+    loop();
 }
+
