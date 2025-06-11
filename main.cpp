@@ -20,6 +20,16 @@ struct Raw{
 vector<string> dataset;
 vector<Raw> base;
 
+const char* ignoreList[3] = {
+    ":",
+    "'",
+    "\n"
+};
+
+std::vector<std::pair<std::string, std::string>> replaceList = {
+    {"!", "."},
+};
+
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // Util functions
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
