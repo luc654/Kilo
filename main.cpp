@@ -98,6 +98,11 @@ int formatRDS(vector<string>& dataset, string stringData) {
     return 0;
 }
 
+// 
+//  Update a given dataset to include a new word.
+//  Takes the starterword (word) and its next value (next) and appends it as a Raw
+//  Object to the end of the given dataset (list) 
+//
 
 int handleWord(string word, string next, vector<Raw>& list){
     bool flagg = true;
@@ -137,6 +142,12 @@ vector<Raw> fillDS(vector<string> dataset){
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
+
+// 
+// Retrieves a word based on input and a given dataset. 
+// This function does all the probabililty calculations.
+// 
+
 string getWord(string input, vector<Raw> dataset){
     bool flag = false;
     for(int i = 0; i < dataset.size(); i++){
@@ -157,6 +168,10 @@ string getWord(string input, vector<Raw> dataset){
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
+// 
+// Convert content of file to string and return it. 
+// File location starts at root of this directory.
+// 
 string readFile(string fileName){
 
     string contents;
@@ -170,7 +185,9 @@ string readFile(string fileName){
 }
 
 
-
+// 
+// Start the feedback loop.
+// 
 void loop(){
     while(true){
         string input; 
